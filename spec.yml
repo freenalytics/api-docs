@@ -1,0 +1,2080 @@
+openapi: 3.0.2
+servers:
+  - url: https://$API_URL
+info:
+  title: Freenalytics API
+  description: This site contains the documentation for the Freenalytics API.
+  version: 0.1.0
+tags:
+  - name: Auth
+    description: This section contains the supported operations for Auth.
+  - name: User
+    description: This section contains the supported operations for User.
+  - name: Application
+    description: This section contains the supported operations for Application.
+paths:
+  /auth/registration-open:
+    get:
+      tags:
+        - Auth
+      summary: Check if user registration is enabled.
+      description: Check if user registration is enabled on the server. If it is
+        disabled, users will not be able to register new accounts.
+      operationId: registrationOpen
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/RegistrationOpenResponseSchema"
+              example:
+                $ref: "#/components/examples/RegistrationOpenResponseSchema"
+          description: Successful response
+      parameters: []
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user account.
+      description: Register a new user account. This route will only work if the
+        server has enabled user registration.
+      operationId: register
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/RegisterResponseSchema"
+              example:
+                $ref: "#/components/examples/RegisterResponseSchema"
+          description: Successful response
+        "400":
+          description: The body of this request does not conform to the validation schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: SchemaValidationError
+                  description: The body of this request does not conform to the validation schema.
+                  message: ""
+        "401":
+          description: The credentials provided are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: WrongCredentialsError
+                  description: The credentials provided are incorrect.
+                  message: ""
+        "403":
+          description: You do not have access to this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this resource.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/RegisterRequestSchema"
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login with your user account.
+      description: Login with your user account. Responds with a bearer token to
+        authenticate further requests.
+      operationId: login
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LoginResponseSchema"
+              example:
+                $ref: "#/components/examples/LoginResponseSchema"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/LoginRequestSchema"
+  /auth/change-password:
+    put:
+      tags:
+        - Auth
+      summary: Change your user account password.
+      description: Change your user account password.
+      operationId: changePassword
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ChangePasswordResponseSchema"
+              example:
+                $ref: "#/components/examples/ChangePasswordResponseSchema"
+          description: Successful response
+        "401":
+          description: The credentials provided are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: WrongCredentialsError
+                  description: The credentials provided are incorrect.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/ChangePasswordRequestSchema"
+      security:
+        - bearer_token: []
+  /users:
+    get:
+      tags:
+        - User
+      summary: Get all users.
+      description: Get all registered users in the platform.
+      operationId: getAllUsers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserResponseSchema"
+              example:
+                $ref: "#/components/examples/UserResponseSchema-arr"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters: []
+      security:
+        - bearer_token: []
+  /users/me:
+    get:
+      tags:
+        - User
+      summary: Get the current user.
+      description: Get the user information for the requesting user.
+      operationId: getCurrentUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserResponseSchema"
+              example:
+                $ref: "#/components/examples/UserResponseSchema"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters: []
+      security:
+        - bearer_token: []
+  /users/:username:
+    patch:
+      tags:
+        - User
+      summary: Update the current user.
+      description: Update the user information for the requesting user.
+      operationId: updateCurrentUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserResponseSchema"
+              example:
+                $ref: "#/components/examples/UserResponseSchema"
+          description: Successful response
+        "400":
+          description: The body of this request does not conform to the validation schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: SchemaValidationError
+                  description: The body of this request does not conform to the validation schema.
+                  message: ""
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters:
+        - name: username
+          description: The username of the user to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UserUpdateRequestSchema"
+      security:
+        - bearer_token: []
+    get:
+      tags:
+        - User
+      summary: Get a user by their username.
+      description: Get a user by their username.
+      operationId: getUserByUsername
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserResponseSchema"
+              example:
+                $ref: "#/components/examples/UserResponseSchema"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: username
+          description: The username of the user to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /applications:
+    get:
+      tags:
+        - Application
+      summary: Get all applications for the requesting user.
+      description: Get all applications for the requesting user.
+      operationId: getAllApplicationsForUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationResponseSchema-arr"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - Application
+      summary: Create a new application for the requesting user.
+      description: >-
+        Create a new application for the requesting user.
+          The `schema` field in the request body should be a valid JSON Schema that describes the data
+          that will be uploaded in the future.
+      operationId: createApplicationForUser
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationResponseSchema"
+          description: Successful response
+        "400":
+          description: The body of this request does not conform to the validation schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: SchemaValidationError
+                  description: The body of this request does not conform to the validation schema.
+                  message: ""
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/ApplicationCreateRequestSchema"
+      security:
+        - bearer_token: []
+  /applications/:domain:
+    get:
+      tags:
+        - Application
+      summary: Get an application by domain for the requesting user.
+      description: Get an application by domain for the requesting user.
+      operationId: getApplicationByDomain
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationResponseSchema"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - Application
+      summary: Update an application by domain for the requesting user.
+      description: Update an application by domain for the requesting user.
+      operationId: updateApplicationByDomain
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationResponseSchema"
+          description: Successful response
+        "400":
+          description: The body of this request does not conform to the validation schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: SchemaValidationError
+                  description: The body of this request does not conform to the validation schema.
+                  message: ""
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/ApplicationUpdateRequestSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - Application
+      summary: Delete an application by domain for the requesting user.
+      description: Delete an application by domain for the requesting user.
+      operationId: deleteApplicationByDomain
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationDeleteResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationDeleteResponseSchema"
+          description: Successful response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /applications/:domain/data:
+    post:
+      tags:
+        - Application
+      summary: Create a new data entry for an application for the requesting user.
+      description: >-
+        Create a new data entry for an application for the requesting user.
+          The shape of the request body will depend on the schema that was used to create the application.
+      operationId: createApplicationData
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationDataResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationDataResponseSchema"
+          description: Successful response
+        "400":
+          description: The body of this request does not conform to the validation schema.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: SchemaValidationError
+                  description: The body of this request does not conform to the validation schema.
+                  message: ""
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to upload the data to.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/ApplicationDataRequestSchema"
+      security:
+        - bearer_token: []
+    get:
+      tags:
+        - Application
+      summary: Get data entries for an application for the requesting user.
+      description: Get paginated data entries for an application for the requesting
+        user in descending order by creation date.
+      operationId: getApplicationData
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ApplicationDataPaginatedResponseSchema"
+              example:
+                $ref: "#/components/examples/ApplicationDataPaginatedResponseSchema"
+          description: Successful response
+        "400":
+          description: The server could not handle your request. Please verify that your
+            request is correct.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not handle your request. Please verify that your
+                    request is correct.
+                  message: ""
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to upload the data to.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: start
+          description: The index cursor where to start the list of data entries. Defaults
+            to `0`.
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: limit
+          description: The number of data entries to return. Defaults to `50`.
+          in: query
+          required: false
+          schema:
+            type: number
+      security:
+        - bearer_token: []
+components:
+  schemas:
+    RegisterRequestSchema:
+      required:
+        - username
+        - password
+        - locale
+      type: object
+      properties:
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[\w._-]*$
+          type: string
+        password:
+          minLength: 8
+          type: string
+        locale:
+          type: string
+          enum:
+            - en
+      additionalProperties: false
+    RegisterResponseSchema:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+    LoginRequestSchema:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+    LoginResponseSchema:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+      additionalProperties: false
+    RegistrationOpenResponseSchema:
+      required:
+        - open
+      type: object
+      properties:
+        open:
+          type: boolean
+      additionalProperties: false
+    ChangePasswordRequestSchema:
+      required:
+        - old_password
+        - new_password
+      type: object
+      properties:
+        old_password:
+          type: string
+        new_password:
+          type: string
+      additionalProperties: false
+    ChangePasswordResponseSchema:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+    UserResponseSchema:
+      required:
+        - username
+        - locale
+        - createdAt
+        - lastModifiedAt
+      type: object
+      properties:
+        username:
+          type: string
+        locale:
+          type: string
+          enum:
+            - en
+        createdAt:
+          format: date-time
+          type: string
+        lastModifiedAt:
+          format: date-time
+          type: string
+      additionalProperties: false
+    UserUpdateRequestSchema:
+      type: object
+      properties:
+        locale:
+          type: string
+          enum:
+            - en
+      additionalProperties: false
+    ApplicationCreateRequestSchema:
+      required:
+        - name
+        - type
+        - schema
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+            - mobile
+            - web
+            - server
+            - desktop
+            - other
+          type: string
+        schema:
+          type: string
+        connectors:
+          default: []
+          type: array
+          items:
+            required:
+              - package_url
+              - language
+            type: object
+            properties:
+              package_url:
+                format: uri
+                type: string
+              language:
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    ApplicationUpdateRequestSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+            - mobile
+            - web
+            - server
+            - desktop
+            - other
+          type: string
+        connectors:
+          type: array
+          items:
+            required:
+              - package_url
+              - language
+            type: object
+            properties:
+              package_url:
+                format: uri
+                type: string
+              language:
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    ApplicationDeleteResponseSchema:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+    ApplicationResponseSchema:
+      required:
+        - name
+        - owner
+        - domain
+        - type
+        - connectors
+        - template
+        - createdAt
+        - lastModifiedAt
+      type: object
+      properties:
+        name:
+          type: string
+        owner:
+          type: string
+        domain:
+          type: string
+        type:
+          enum:
+            - mobile
+            - web
+            - server
+            - desktop
+            - other
+          type: string
+        connectors:
+          type: array
+          items:
+            required:
+              - package_url
+              - language
+            type: object
+            properties:
+              package_url:
+                format: uri
+                type: string
+              language:
+                type: string
+            additionalProperties: false
+        template:
+          required:
+            - raw_schema
+            - schema
+          type: object
+          properties:
+            raw_schema:
+              type: string
+            schema:
+              required:
+                - type
+                - properties
+                - required
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - object
+                properties:
+                  type: object
+                  properties: {}
+                  additionalProperties: false
+                required:
+                  type: array
+                  items:
+                    type: string
+              additionalProperties: false
+          additionalProperties: false
+        createdAt:
+          format: date-time
+          type: string
+        lastModifiedAt:
+          format: date-time
+          type: string
+      additionalProperties: false
+    ApplicationDataRequestSchema:
+      required:
+        - example
+      type: object
+      properties:
+        example:
+          type: string
+      additionalProperties: false
+    ApplicationDataResponseSchema:
+      required:
+        - domain
+      type: object
+      properties:
+        domain:
+          type: string
+        payload:
+          required:
+            - example
+          type: object
+          properties:
+            example:
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    ApplicationDataPaginatedResponseSchema:
+      required:
+        - result
+        - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            required:
+              - domain
+              - createdAt
+            type: object
+            properties:
+              domain:
+                type: string
+              payload:
+                required:
+                  - example
+                type: object
+                properties:
+                  example:
+                    type: string
+                additionalProperties: false
+              createdAt:
+                format: date-time
+                type: string
+            additionalProperties: false
+        pagination:
+          required:
+            - limit
+            - current
+            - previous
+            - next
+            - total
+            - isLast
+          type: object
+          properties:
+            limit:
+              type: integer
+            current:
+              type: integer
+            previous:
+              type: integer
+            next:
+              type: integer
+            total:
+              type: integer
+            isLast:
+              type: boolean
+          additionalProperties: false
+      additionalProperties: false
+  requestBodies:
+    RegisterRequestSchema:
+      description: Request body for RegisterRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RegisterRequestSchema"
+    RegisterResponseSchema:
+      description: Request body for RegisterResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RegisterResponseSchema"
+    LoginRequestSchema:
+      description: Request body for LoginRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginRequestSchema"
+    LoginResponseSchema:
+      description: Request body for LoginResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginResponseSchema"
+    RegistrationOpenResponseSchema:
+      description: Request body for RegistrationOpenResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RegistrationOpenResponseSchema"
+    ChangePasswordRequestSchema:
+      description: Request body for ChangePasswordRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ChangePasswordRequestSchema"
+    ChangePasswordResponseSchema:
+      description: Request body for ChangePasswordResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ChangePasswordResponseSchema"
+    UserResponseSchema:
+      description: Request body for UserResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserResponseSchema"
+    UserUpdateRequestSchema:
+      description: Request body for UserUpdateRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserUpdateRequestSchema"
+    ApplicationCreateRequestSchema:
+      description: Request body for ApplicationCreateRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationCreateRequestSchema"
+    ApplicationUpdateRequestSchema:
+      description: Request body for ApplicationUpdateRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationUpdateRequestSchema"
+    ApplicationDeleteResponseSchema:
+      description: Request body for ApplicationDeleteResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationDeleteResponseSchema"
+    ApplicationResponseSchema:
+      description: Request body for ApplicationResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationResponseSchema"
+    ApplicationDataRequestSchema:
+      description: Request body for ApplicationDataRequestSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationDataRequestSchema"
+    ApplicationDataResponseSchema:
+      description: Request body for ApplicationDataResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationDataResponseSchema"
+    ApplicationDataPaginatedResponseSchema:
+      description: Request body for ApplicationDataPaginatedResponseSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApplicationDataPaginatedResponseSchema"
+  examples:
+    RegisterRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: dEK8MEaVJYNsD6ESruJ7Uy0bLZeNyCsMCao4gl9zDsYIGzqRvt.5BaIyIrB87Jbi-vEhqVShQk
+          password: pjuaedlxddb
+          locale: en
+    RegisterRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: dd-oZyeGWrvOh_ASnEW5KGKdv-uTM6Ksgfity8502.0horYf0gvCpkd
+            password: gs98bept8w
+            locale: en
+          - username: PzfFRsXQTjM90aLFxabWsyEC3Mm
+            password: eh5exwtage
+            locale: en
+          - username: Jj5m8XwJkeuhym7j7_qkQqVLPFIB0HNyGDQguhcTNO5LKHcmaPTs8LAy0AcmgTUO5t
+            password: fhm51vuhob
+            locale: en
+    RegisterResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          message: 9muzmlu0llt
+    RegisterResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - message: ktydr1fuxhf
+          - message: dhev1xkd1wo
+          - message: g1gb83aw86k
+    LoginRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: fs57job3der
+          password: 39lfpiyxwd6
+    LoginRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: ult33cegxh9
+            password: i0sb7lim93
+          - username: rmzrxllvxpo
+            password: 22t07c3cfuy
+          - username: 48minv8kizq
+            password: ypz4ayl9i2
+    LoginResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          token: w5usa28pam
+    LoginResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - token: l260jg87a3t
+          - token: xk6xz37v8kq
+          - token: dc5i2yyc9ql
+    RegistrationOpenResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          open: false
+    RegistrationOpenResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - open: true
+          - open: false
+          - open: true
+    ChangePasswordRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          old_password: pjx6hu9iz7j
+          new_password: 1446hk0z777d
+    ChangePasswordRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - old_password: t37h8asxb4q
+            new_password: 0ckebstti17b
+          - old_password: usgtw92dlfe
+            new_password: 0t04619k266
+          - old_password: h989eccziw4
+            new_password: 6ykabeybx9o
+    ChangePasswordResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          message: g1pq3uoapfp
+    ChangePasswordResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - message: gx7lqww3qw
+          - message: dn2a327z3vf
+          - message: obk96cz5ou
+    UserResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: 1olbiv8bhrs
+          locale: en
+          createdAt: 2022-10-27T08:46:16.767Z
+          lastModifiedAt: 2022-10-27T08:46:16.767Z
+    UserResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: 94qoovz5h1
+            locale: en
+            createdAt: 2022-10-27T08:46:16.772Z
+            lastModifiedAt: 2022-10-27T08:46:16.772Z
+          - username: p92ls1a0poj
+            locale: en
+            createdAt: 2022-10-27T08:46:16.773Z
+            lastModifiedAt: 2022-10-27T08:46:16.774Z
+          - username: f1xhp0v6b7m
+            locale: en
+            createdAt: 2022-10-27T08:46:16.775Z
+            lastModifiedAt: 2022-10-27T08:46:16.775Z
+    UserUpdateRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          locale: en
+    UserUpdateRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - locale: en
+          - locale: en
+          - locale: en
+    ApplicationCreateRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: 61e213fwcbn
+          type: mobile
+          schema: gkjb8qnh6
+          connectors: []
+    ApplicationCreateRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 8an76y9jg2b
+            type: web
+            schema: 00uz24j4wbhyj
+            connectors: []
+          - name: dhxn6l9tmvl
+            type: server
+            schema: tmj476petq
+            connectors: []
+          - name: w0jb0wmj2k
+            type: web
+            schema: u4yyzvgfedr
+            connectors: []
+    ApplicationUpdateRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: wav2ggxrnxq
+          type: server
+          connectors:
+            - package_url: ftp://www.rxsggaiifb.com
+              language: xtzhzbok8u
+    ApplicationUpdateRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: ot5r17nt4fm
+            type: web
+            connectors:
+              - package_url: https://www.90uvd47340w.gov
+                language: ait09irput5
+          - name: 2s20dfbev86
+            type: web
+            connectors:
+              - package_url: ftp://www.nsr5yekz56p.com
+                language: 17bunn5xnw9
+          - name: r39457smd6
+            type: other
+            connectors:
+              - package_url: ftp://www.gn8yt4wawn9.gov
+                language: tv96sq54x3p
+    ApplicationDeleteResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          message: 5i4b78oks68
+    ApplicationDeleteResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - message: 6snaiydvl6
+          - message: 8uj3gl1wdbx
+          - message: 7jy0cso9loa
+    ApplicationResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: zb6qindc0mk
+          owner: hnwwo93vulc
+          domain: vi8tmzbjj9o
+          type: web
+          connectors:
+            - package_url: http://www.s6gerpj6cjc.gov
+              language: qk2la0jw58
+          template:
+            raw_schema: vtprb0buyur
+            schema:
+              type: object
+              properties: {}
+              required:
+                - okxvdlh215n
+          createdAt: 2022-10-27T08:46:16.822Z
+          lastModifiedAt: 2022-10-27T08:46:16.822Z
+    ApplicationResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 3caessxc91t
+            owner: hjduv8lowqj
+            domain: urb1iqp5fy
+            type: server
+            connectors:
+              - package_url: https://www.6ltglgyeiz.com
+                language: caqcev2zwj
+            template:
+              raw_schema: 99lv9su3wi
+              schema:
+                type: object
+                properties: {}
+                required:
+                  - d2xciurdvyu
+            createdAt: 2022-10-27T08:46:16.832Z
+            lastModifiedAt: 2022-10-27T08:46:16.832Z
+          - name: r6b9a9h9b7c
+            owner: bodbffdvw7s
+            domain: e3n88cnxxv6
+            type: mobile
+            connectors:
+              - package_url: ftp://www.vf6wwpdmkj.net
+                language: 4s1y78wmz6d
+            template:
+              raw_schema: bb1w7gy9n2i
+              schema:
+                type: object
+                properties: {}
+                required:
+                  - gp6c7af9ce5
+            createdAt: 2022-10-27T08:46:16.843Z
+            lastModifiedAt: 2022-10-27T08:46:16.843Z
+          - name: tzc11i9ujf
+            owner: ip7bo5qotyo
+            domain: zdzydfs8m2
+            type: server
+            connectors:
+              - package_url: ftp://www.vigu6239bu.com
+                language: im9usl25mx
+            template:
+              raw_schema: 78m7jt0a99b
+              schema:
+                type: object
+                properties: {}
+                required:
+                  - 6vadw9umxai
+            createdAt: 2022-10-27T08:46:16.853Z
+            lastModifiedAt: 2022-10-27T08:46:16.853Z
+    ApplicationDataRequestSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          example: z1i5k51o8ap
+    ApplicationDataRequestSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - example: b8yy9fr0rkc
+          - example: rjnw8g3dtnn
+          - example: dcy0kq5cble
+    ApplicationDataResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          domain: 8iiws5jxy1
+          payload:
+            example: fy2f584p32h
+    ApplicationDataResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - domain: icxuh6a0zrn
+            payload:
+              example: 72snsl694ah
+          - domain: w8p3ho516nb
+            payload:
+              example: 92o5801p5ak
+          - domain: xk24igyk2d
+            payload:
+              example: s7ioajjfrx
+    ApplicationDataPaginatedResponseSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          result:
+            - domain: j1q82ovyjd
+              payload:
+                example: ov653fzx0me
+              createdAt: 2022-10-27T08:46:16.869Z
+          pagination:
+            limit: 1
+            current: 1
+            previous: 2
+            next: 1
+            total: 3
+            isLast: false
+    ApplicationDataPaginatedResponseSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - result:
+              - domain: kswqzeti9fq
+                payload:
+                  example: 9qffcbyupiu
+                createdAt: 2022-10-27T08:46:16.883Z
+            pagination:
+              limit: 3
+              current: 1
+              previous: 1
+              next: 1
+              total: 3
+              isLast: true
+          - result:
+              - domain: 97d9vcexfnu
+                payload:
+                  example: dqjs7j1ll9s
+                createdAt: 2022-10-27T08:46:16.895Z
+            pagination:
+              limit: 4
+              current: 3
+              previous: 4
+              next: 4
+              total: 3
+              isLast: false
+          - result:
+              - domain: 3iaxsif2yj6
+                payload:
+                  example: 42oka1n0x81
+                createdAt: 2022-10-27T08:46:16.910Z
+            pagination:
+              limit: 3
+              current: 3
+              previous: 1
+              next: 1
+              total: 2
+              isLast: false
+  securitySchemes:
+    bearer_token:
+      name: JWT Access Token
+      description: An access token granted by the server on user login.
+      in: header
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
