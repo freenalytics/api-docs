@@ -1252,6 +1252,88 @@ paths:
             type: number
       security:
         - bearer_token: []
+  /applications/:domain/data/csv:
+    get:
+      tags:
+        - Application
+      summary: Export all data entries for an application for the requesting user as
+        CSV.
+      description: Export all data entries for an application for the requesting user
+        as CSV.
+      operationId: getApplicationDataAsCsv
+      responses:
+        "200":
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+          description: Successful binary response
+        "401":
+          description: Please check that you have passed the correct bearer token inside
+            the Authentication header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: Please check that you have passed the correct bearer token inside
+                    the Authentication header.
+                  message: A bearer token is required to access this endpoint.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: domain
+          description: The domain of the application to upload the data to.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
 components:
   schemas:
     RegisterRequestSchema:
@@ -1683,69 +1765,69 @@ components:
         success: true
         status: 200
         data:
-          username: VtHS6LG_S6I2bSMDZA2EcT8pK2u2bLLuO-0USW0LBBxVX
-          password: o5qa9v5jtxt
+          username: BVFyO47bI7qwKgX--adkJT.FR7HqC.v3Uxg-RJKOePEZpSbaiqZegoOa2E7oLHnlSCpgnwnuum_2auly0RN2l0OfFLAEkbb
+          password: 672zx6h1jer
           locale: en
     RegisterRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: tTj3jSa5ZzkMD1vu4MzIuAGPUyaA6-a5A9i
-            password: 2sfjk34pf8
+          - username: EGfdjnZxY-Rq
+            password: e5jtqhtmy
             locale: en
-          - username: S.MxIhcQGPabSQA3gvXCaKiU.8GpCq4WgEK3vrynE_jsku.lO29BPruYTL
-            password: tzf7f05mqu
+          - username: EJ.fo9m43lzLS_FpO8psRu-zu0N8f939c5I9SNz9PQbUydndxgHVHutGn5F
+            password: twtjrczzk5j
             locale: en
-          - username: Ph08vPdP_zUNLTXRC5zb2_g2OWws-ttzDBnarK7
-            password: lou8r2tk58
+          - username: 7Wr-s0i1PTx
+            password: pvxb3wgthkg
             locale: en
     RegisterResponseSchema:
       value:
         success: true
         status: 200
         data:
-          message: e2ppxte1xlj
+          message: ssi2u1p6hf
     RegisterResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - message: u2p4qenzbjp
-          - message: cs0ot1haqow
-          - message: ugotj3mpwp
+          - message: bvvokyyx5h9
+          - message: 0ci777ib4qwa
+          - message: ccnvz7tusvp
     LoginRequestSchema:
       value:
         success: true
         status: 200
         data:
-          username: klwsvw3k83c
-          password: jp73lwqlqx
+          username: bfbvuueg4bg
+          password: s3napctus6s
     LoginRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: vvey087gda
-            password: 0qpzqt4dt9jq
-          - username: cbppbruk2as
-            password: jyyoi28dv6
-          - username: mb3q6afcd2s
-            password: 07h452putwtn
+          - username: m9u5h4jt8l8
+            password: ylx7xrltnb
+          - username: hvp7j70yzhh
+            password: wpvn7r8i3wp
+          - username: xc50rusb3r
+            password: ivsy6wzvreh
     LoginResponseSchema:
       value:
         success: true
         status: 200
         data:
-          token: pa5q8mvy1dh
+          token: zcbspk90lmt
     LoginResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - token: ntn59glz96f
-          - token: e2fpkkjx25u
-          - token: 56eu2e2sopy
+          - token: xdd2kusm6l
+          - token: vgwtrm6b0j
+          - token: 7vgcjc8bkgq
     RegistrationOpenResponseSchema:
       value:
         success: true
@@ -1757,67 +1839,67 @@ components:
         success: true
         status: 200
         data:
-          - open: false
-          - open: false
           - open: true
+          - open: false
+          - open: false
     ChangePasswordRequestSchema:
       value:
         success: true
         status: 200
         data:
-          old_password: lskoafb6j0e
-          new_password: c8bqh5fgj3
+          old_password: k2q9mp7za7n
+          new_password: fw2izrt9e1m
     ChangePasswordRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - old_password: 0jzrl5gc2nj6
-            new_password: fnfv1jb4ffo
-          - old_password: aqomupmbehu
-            new_password: ku39rso0lp
-          - old_password: eb0krfgmpua
-            new_password: 60c8lnjm474
+          - old_password: rb6ie3rbfgd
+            new_password: pgsxblzhlst
+          - old_password: i8f9i80zs6
+            new_password: ec267bs624w
+          - old_password: z1v3q3sjbs
+            new_password: 3k547oxt2ut
     ChangePasswordResponseSchema:
       value:
         success: true
         status: 200
         data:
-          message: 68a1b8opcba
+          message: 5bsdwaxkmpl
     ChangePasswordResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - message: i975r2eolyi
-          - message: 4apd9xvhtxn
-          - message: or3jdpcana
+          - message: hnjm1m0ipsv
+          - message: adrdjsyo3t
+          - message: ulxo46bd4e
     UserResponseSchema:
       value:
         success: true
         status: 200
         data:
-          username: rr99xe69j8
+          username: mqp3jv5lyi
           locale: en
-          createdAt: 2022-10-29T03:20:06.741Z
-          lastModifiedAt: 2022-10-29T03:20:06.742Z
+          createdAt: 2022-10-29T06:16:11.908Z
+          lastModifiedAt: 2022-10-29T06:16:11.909Z
     UserResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: f5ovfutdlkd
+          - username: arpxyx6lji
             locale: en
-            createdAt: 2022-10-29T03:20:06.747Z
-            lastModifiedAt: 2022-10-29T03:20:06.747Z
-          - username: c4yc0d2a0eu
+            createdAt: 2022-10-29T06:16:11.913Z
+            lastModifiedAt: 2022-10-29T06:16:11.913Z
+          - username: oyq11sv4xw
             locale: en
-            createdAt: 2022-10-29T03:20:06.749Z
-            lastModifiedAt: 2022-10-29T03:20:06.749Z
-          - username: 2o6owketha
+            createdAt: 2022-10-29T06:16:11.914Z
+            lastModifiedAt: 2022-10-29T06:16:11.915Z
+          - username: 9dem5sskngn
             locale: en
-            createdAt: 2022-10-29T03:20:06.750Z
-            lastModifiedAt: 2022-10-29T03:20:06.750Z
+            createdAt: 2022-10-29T06:16:11.916Z
+            lastModifiedAt: 2022-10-29T06:16:11.916Z
     UserUpdateRequestSchema:
       value:
         success: true
@@ -1837,197 +1919,197 @@ components:
         success: true
         status: 200
         data:
-          name: 6rjnc6auqtq
-          type: server
-          schema: xn3ikjplmng
+          name: jlewp8o1hnd
+          type: desktop
+          schema: in0bseq84t
           connectors: []
     ApplicationCreateRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: sp1jyfskbkh
-            type: desktop
-            schema: t0vea12uyd
-            connectors: []
-          - name: fibnsti6op7
+          - name: eashbeutr3w
             type: mobile
-            schema: yymcp8pc5wb
+            schema: 5od8lxltutm
             connectors: []
-          - name: aparijv2snd
+          - name: u4h6z9iymm
+            type: desktop
+            schema: 45fihrttv9c
+            connectors: []
+          - name: 9v8h7m7pkgs
             type: web
-            schema: zqqn9cd7qvp
+            schema: 7ntmmr88zj2
             connectors: []
     ApplicationUpdateRequestSchema:
       value:
         success: true
         status: 200
         data:
-          name: uy70bytf3n
+          name: wrcivaepz3l
           type: desktop
           connectors:
-            - package_url: http://www.betkvbm8r8s.gov
-              language: m2rvmhf7q9j
+            - package_url: ftp://www.ntyefvf8y8r.com
+              language: btwnk51y7sg
     ApplicationUpdateRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: vyqotlfh2lo
-            type: mobile
-            connectors:
-              - package_url: https://www.5cwvo56fnn2.net
-                language: a2hiv72yi2g
-          - name: lg212tnx2rd
-            type: server
-            connectors:
-              - package_url: http://www.ga7cuvly4e.gov
-                language: tdgoxroccyr
-          - name: vvbnrxzve3n
+          - name: w192xvps3c
             type: other
             connectors:
-              - package_url: http://www.dx27c7fe10t.net
-                language: 7fssoso0i2
+              - package_url: https://www.pmm5n59c2r.net
+                language: rzl6734jxn
+          - name: nhs93idebda
+            type: mobile
+            connectors:
+              - package_url: http://www.2tj87tgvxaa.net
+                language: d34nwqh1vi
+          - name: 9kcl11glj2t
+            type: other
+            connectors:
+              - package_url: ftp://www.zxqch9zo38.com
+                language: 7q4bp9snuvp
     ApplicationDeleteResponseSchema:
       value:
         success: true
         status: 200
         data:
-          message: 029nkvbcpasc
+          message: jan33qyx6r
     ApplicationDeleteResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - message: y2ad1z9pxc
-          - message: gqthnu32fu
-          - message: lbktelkqzor
+          - message: jfrvbl58bz
+          - message: t4vu561gt2
+          - message: i0w11yqogwl
     ApplicationResponseSchema:
       value:
         success: true
         status: 200
         data:
-          name: gl2mviu9efc
-          owner: pvqwmre4e1o
-          domain: ywid49nozje
-          type: server
+          name: tonqetcltod
+          owner: 64xn1gcb6sc
+          domain: sslxok736pn
+          type: desktop
           connectors:
-            - package_url: https://www.clmy5qx9bxj.net
-              language: 2tuo1siy75i
+            - package_url: http://www.v1pwtafmv59.gov
+              language: nte07x4yo
           template:
-            raw_schema: f70nz60d4d
+            raw_schema: uhne7vykv9
             schema:
               type: object
               properties: {}
               required:
-                - cel0bvgydg8
-          createdAt: 2022-10-29T03:20:06.795Z
-          lastModifiedAt: 2022-10-29T03:20:06.795Z
+                - kmpcbcloaml
+          createdAt: 2022-10-29T06:16:11.963Z
+          lastModifiedAt: 2022-10-29T06:16:11.963Z
     ApplicationResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: ufgc2f899of
-            owner: kisy57oq22
-            domain: jqc92uobo3e
+          - name: tnsew6ofr2t
+            owner: a5a0y06fvhp
+            domain: ryg0mctf67
             type: server
             connectors:
-              - package_url: ftp://www.tkcghjytm69.com
-                language: 1bbb4pgr64i
+              - package_url: http://www.8s9v0i7tl54.gov
+                language: dl8vv762km9
             template:
-              raw_schema: 0ykeqlvu2ca
+              raw_schema: tiv3wsf7zd
               schema:
                 type: object
                 properties: {}
                 required:
-                  - f1wf4set1r
-            createdAt: 2022-10-29T03:20:06.808Z
-            lastModifiedAt: 2022-10-29T03:20:06.808Z
-          - name: m0249xbthuj
-            owner: wdrp1uuu2dq
-            domain: pr00zes5vt
+                  - ng295jxdmx
+            createdAt: 2022-10-29T06:16:11.972Z
+            lastModifiedAt: 2022-10-29T06:16:11.972Z
+          - name: 3ovi1prtph5
+            owner: yxjon8ski2
+            domain: mm583zxog9j
+            type: server
+            connectors:
+              - package_url: ftp://www.e7uld5ey5y4.gov
+                language: 1y6ew8lol3
+            template:
+              raw_schema: 95nmlyx393n
+              schema:
+                type: object
+                properties: {}
+                required:
+                  - wf4yt44av09
+            createdAt: 2022-10-29T06:16:11.982Z
+            lastModifiedAt: 2022-10-29T06:16:11.982Z
+          - name: li6yuztclv
+            owner: 8eeup6pnfmi
+            domain: q2sww8rb8p
             type: other
             connectors:
-              - package_url: https://www.4u6iaida2b.net
-                language: alux4v7fv1
+              - package_url: http://www.wlirml9w7pe.com
+                language: ovnctfpgwq
             template:
-              raw_schema: xmm06qos8al
+              raw_schema: 3p0esw30nlb
               schema:
                 type: object
                 properties: {}
                 required:
-                  - ag7vbwyq384
-            createdAt: 2022-10-29T03:20:06.818Z
-            lastModifiedAt: 2022-10-29T03:20:06.818Z
-          - name: zuzioory92i
-            owner: n5uvhjlyz6
-            domain: stgklq469b9
-            type: server
-            connectors:
-              - package_url: https://www.pokqzk64uno.net
-                language: sv1ezkmbqun
-            template:
-              raw_schema: 6j65151qzzh
-              schema:
-                type: object
-                properties: {}
-                required:
-                  - gggh7diqzcg
-            createdAt: 2022-10-29T03:20:06.831Z
-            lastModifiedAt: 2022-10-29T03:20:06.831Z
+                  - 4zxinrcr2ba
+            createdAt: 2022-10-29T06:16:11.991Z
+            lastModifiedAt: 2022-10-29T06:16:11.991Z
     ApplicationDataRequestSchema:
       value:
         success: true
         status: 200
         data:
-          example: 4x9vybzi05
+          example: dq4gfjidlga
     ApplicationDataRequestSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - example: grxmtas3ykw
-          - example: m1jjp8vbzer
-          - example: ckano8wcoak
+          - example: gnxcyybgbwo
+          - example: dypo4clv8a
+          - example: iyrhxhilwp
     ApplicationDataResponseSchema:
       value:
         success: true
         status: 200
         data:
-          domain: weoq7ghz2e
+          domain: ill6ms7jjhp
           payload:
-            example: ojq56j9tslb
+            example: ifes86rv0f
     ApplicationDataResponseSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - domain: h19o9rh8hhm
+          - domain: 0ofr4gmrgnq9
             payload:
-              example: vv7qk3fe62e
-          - domain: efrq5s2xoc5
+              example: 4erizmzduu
+          - domain: 839gz2gqu4d
             payload:
-              example: 2577jykhj56
-          - domain: 7z3yxv39fi4
+              example: qpbobdx2hs8
+          - domain: wabbv4zrpon
             payload:
-              example: uj3mz1svbwn
+              example: aiorycdg0qp
     ApplicationDataPaginatedResponseSchema:
       value:
         success: true
         status: 200
         data:
           result:
-            - domain: z02ji0yhy4
+            - domain: kz7gr4ud9x
               payload:
-                example: 9jtb1f3cndq
-              createdAt: 2022-10-29T03:20:06.846Z
+                example: z7o6tki59yl
+              createdAt: 2022-10-29T06:16:12.003Z
           pagination:
             limit: 2
             current: 1
             previous: 3
-            next: 2
-            total: 1
+            next: 3
+            total: 2
             isLast: false
     ApplicationDataPaginatedResponseSchema-arr:
       value:
@@ -2035,40 +2117,40 @@ components:
         status: 200
         data:
           - result:
-              - domain: ylyku360d4
+              - domain: bf3r6t247kt
                 payload:
-                  example: c7xnzcvdqmj
-                createdAt: 2022-10-29T03:20:06.859Z
+                  example: hemm243a60q
+                createdAt: 2022-10-29T06:16:12.017Z
             pagination:
-              limit: 1
-              current: 1
-              previous: 4
-              next: 4
-              total: 2
-              isLast: false
-          - result:
-              - domain: 5qi19o8imw
-                payload:
-                  example: 557mlqqgfs
-                createdAt: 2022-10-29T03:20:06.869Z
-            pagination:
-              limit: 4
-              current: 2
+              limit: 3
+              current: 4
               previous: 2
               next: 2
               total: 2
-              isLast: true
+              isLast: false
           - result:
-              - domain: 9fgpq3pw4bd
+              - domain: yysrqy0y46
                 payload:
-                  example: xh4mz9cz61c
-                createdAt: 2022-10-29T03:20:06.880Z
+                  example: lqmrof7myz
+                createdAt: 2022-10-29T06:16:12.029Z
             pagination:
-              limit: 2
+              limit: 4
               current: 1
               previous: 3
-              next: 2
-              total: 3
+              next: 4
+              total: 2
+              isLast: true
+          - result:
+              - domain: wsxx2hhvvh
+                payload:
+                  example: 6zq7sgics1v
+                createdAt: 2022-10-29T06:16:12.038Z
+            pagination:
+              limit: 1
+              current: 4
+              previous: 2
+              next: 3
+              total: 1
               isLast: true
   securitySchemes:
     bearer_token:
